@@ -1,0 +1,199 @@
+package com.Raiden.Model;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+import static java.awt.event.KeyEvent.*;
+
+/**
+ * Game's world initializer: add flights, bullets, power-ups etc.
+*/
+public class World implements Runnable, KeyListener, ActionListener, MouseListener, MouseMotionListener {
+    protected ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+    protected ArrayList<EnemyBullet> enemyBullets = new ArrayList<EnemyBullet>();
+    protected ArrayList<Bullet> bulletsToRemove = new ArrayList<Bullet>();
+    protected ArrayList<EnemyBullet> enemyBulletsToRemove = new ArrayList<EnemyBullet>();
+    protected ArrayList<PowerUP> powerUPS = new ArrayList<PowerUP>();
+    protected ArrayList<PowerUP> powerUPSToRemove = new ArrayList<PowerUP>();
+    protected ArrayList<Enemy> enemy = new ArrayList<Enemy>();
+    protected ArrayList<Enemy> enemiesToRemove = new ArrayList<Enemy>();
+    protected ArrayList<Cloud> clouds = new ArrayList<Cloud>();
+    protected ArrayList<Cloud> cloudsToRemove = new ArrayList<Cloud>();
+    protected ArrayList<Background> backgrounds = new ArrayList<Background>();
+    protected ArrayList<DeadActor> deadActors = new ArrayList<DeadActor>();
+    protected ArrayList<DeadActor> deadActorsToRemove = new ArrayList<DeadActor>();
+    protected Player player;
+    protected Background background1, background2;
+    protected JFrame frame;
+    protected Image powerUPImg;
+    protected Image bulletImg;
+    protected Image enemyBulletImg;
+    protected Image backgroundImg1, backgroundImg2;
+    protected Image playerImg;
+    protected Image enemyImg;
+    protected Image deadImg;
+    protected Image cloudImg;
+
+
+    public World(JFrame frame){
+        this.frame = frame;
+        try{
+            imageLoad();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        background1 = new Background(0, 550, 800, backgroundImg1, frame);
+        background2 = new Background(1, 550, 800, backgroundImg2, frame);
+        backgrounds.add(background1);
+        backgrounds.add(background2);
+        powerUPS.add(new Shield(32, 32, powerUPImg, frame, this));
+        player = new Player(frame.getWidth()/2, frame.getHeight() + 60, 15, 15, 1000, 25, 60, playerImg, frame, this);
+        enemyMaker(10);
+    }
+
+    private void imageLoad() throws IOException {
+        enemyImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/enemy-big.png")).getImage();
+        playerImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/ship.png")).getImage();
+        powerUPImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/power-up.png")).getImage();
+        enemyBulletImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/enemy-bullet.png")).getImage();
+        bulletImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/laser-bolts.png")).getImage();
+        backgroundImg1 = new ImageIcon(this.getClass().getClassLoader().getResource("images/desert-background.png")).getImage();
+        backgroundImg2 = new ImageIcon(this.getClass().getClassLoader().getResource("images/desert-background2.png")).getImage();
+        cloudImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/clouds-transparent.png")).getImage();
+        deadImg = new ImageIcon(this.getClass().getClassLoader().getResource("images/explosion.png")).getImage();
+    }
+
+    public void enemyMaker(int MAX){
+        int numOfEnemy = new Random().nextInt(MAX + 1);
+        for(int i = 0; i < numOfEnemy; i++){
+            float enemyPosX = new Random().nextInt(frame.getWidth());
+            enemy.add(new Enemy(enemyPosX,-54, 300, 50, 54, enemyImg, 10, frame, this));
+        }
+    }
+
+    public void powerUPMaker(int MAX){
+        int numOfpowerups = new Random().nextInt(MAX + 1);
+        for(int i = 0; i < numOfpowerups; i++){
+            if(new Random().nextBoolean()) {
+                powerUPS.add(new Shield(32, 32, powerUPImg, frame, this));
+            }
+            else
+                powerUPS.add(new Laser(32, 32, powerUPImg, frame, this));
+        }
+    }
+
+    public void cloudMaker(){
+        //System.out.println(clouds.size());
+        if(clouds.size() <= 2) {
+            if (new Random().nextInt(10) % 7 == 0){
+                clouds.add(new Cloud(cloudImg, frame));
+            }
+        }
+    }
+
+    public ArrayList<PowerUP> getPowerUPS(){return powerUPS;}
+    public ArrayList<Bullet> getBullet() {return bullets;}
+    public ArrayList<EnemyBullet> getEnemyBullets() {return enemyBullets;}
+    public ArrayList<Enemy> getEnemy() {return enemy;}
+    public Player getPlayer() {return player;}
+    public ArrayList<Bullet> getBulletsToRemove(){return bulletsToRemove;}
+    public ArrayList<PowerUP> getPowerUPSToRemove() {return powerUPSToRemove;}
+    public ArrayList<Enemy> getEnemiesToRemove() {return enemiesToRemove;}
+    public ArrayList<EnemyBullet> getEnemyBulletsToRemove() {return enemyBulletsToRemove;}
+    public ArrayList<Background> getBackground(){return backgrounds;}
+    public ArrayList<Cloud> getClouds() {return clouds;}
+    public ArrayList<Cloud> getCloudsToRemove() {return cloudsToRemove;}
+    public ArrayList<DeadActor> getDeadActorsToRemove() {return deadActorsToRemove;}
+    public ArrayList<DeadActor> getDeadActors() {return deadActors;}
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode())
+        {
+            case VK_ENTER :
+                if(player.getHealth() > 0 && !player.isPaused() && player.isPlaying() && new Random().nextBoolean())player.fireAt(this);
+                break;
+            case VK_F2 :
+                if(player.getHealth() <= 0 && player.isPlaying()){
+                    player.setScore(0);
+                    player.setHealth(1000);
+                    bullets.clear();
+                }
+                break;
+            case VK_SPACE :
+                if(player.getHealth() > 0 && player.isPlaying()){
+                    player.setPaused(!player.isPaused());
+                }
+                break;
+            case VK_F1 :
+                if(!player.isPlaying()){
+                    player.setPlaying(true);
+                    player.setPosY(frame.getHeight() - 80);
+                }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void run() {
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        //powerUPS.add(new Shield(32, 32, powerUPImg, frame));
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if(player.isPlaying() && !player.isPaused() && player.getHealth() > 0) {
+            player.setPosX(e.getX());
+            player.setPosY(e.getY());
+            player.boardDetection();
+        }
+
+    }
+
+
+}
