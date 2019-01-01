@@ -16,6 +16,4 @@ A simple Java implementation of Raiden-like game
 git clone https://github.com/dynamicfire/Rocketman-Odyssey.git
 ```
 Open this project with IntelliJ IDEA(or whatever ide you like)
-JDK 10
-
 Press F1 to play, space to pause
