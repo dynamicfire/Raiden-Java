@@ -25,12 +25,10 @@ public class DeadActor {
     }
 
     public void draw(Graphics g, int[] sourcePoint) {
-        int index = 0;
-        for(int i = 0; i < 5; i++){
-            g.drawImage(img, posX, posY, posX + width, posY + height,
-                    sourcePoint[index], sourcePoint[index + 1], sourcePoint[index + 2], sourcePoint[index + 3], null);
-        index += 4;
-        }
+        Random random = new Random();
+        int index = random.nextInt(5) * 4;
+        g.drawImage(img, posX, posY, posX + width, posY + height,
+                sourcePoint[index], sourcePoint[index + 1], sourcePoint[index + 2], sourcePoint[index + 3], null);
     }
 }
 
