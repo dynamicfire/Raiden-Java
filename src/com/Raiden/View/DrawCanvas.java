@@ -85,7 +85,7 @@ public class DrawCanvas extends JPanel implements Runnable {
         ArrayList<Cloud> localCloud = new ArrayList<Cloud>(clouds);
 
         {
-            int[] sourcePoint = {2, 0, 13, 24};
+            int[] sourcePoint = {2, 0, 13, 23, 2, 24, 13, 47};
             player.draw(g, sourcePoint);
         }
 
