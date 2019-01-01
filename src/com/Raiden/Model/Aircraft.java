@@ -6,7 +6,7 @@ import java.awt.*;
  * This class is a superclass for all aircraft.
  * Aircraft's movement handled by itself.
  *
- * @author Zheng Qifeng
+ * @author dynamicfire
  * @version v0.1 (28 Dec 2018)
  */
 public class Aircraft {
