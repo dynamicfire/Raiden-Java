@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * with orange color and laser.
  * Bullet's movement should not handled by itself.
  *
- * @author Zheng Qifeng
+ * @author dynamicfire
  * @version v0.1 (28 Dec 2018)
  */
 public class Bullet {
