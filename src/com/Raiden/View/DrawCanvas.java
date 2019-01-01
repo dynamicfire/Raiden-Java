@@ -190,7 +190,7 @@ public class DrawCanvas extends JPanel implements Runnable {
                     world.enemyMaker(5);
                 }
                 if(powerups.size() == 0 && player.isPlaying()){
-                    if (new Random().nextInt(1000) % 1997 == 0) {
+                    if (new Random().nextInt(1000) % 997 == 0) {
                         world.powerUPMaker(1);
                     }
                 }
