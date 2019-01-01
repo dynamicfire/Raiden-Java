@@ -12,7 +12,7 @@ import java.util.Random;
  * Default damage: 100
  * Default speed(under cartesian coordinates): 5
  *
- * @author Zheng Qifeng
+ * @author dynamicfire
  * @version v0.1 (28 Dec 2018)
  */
 public class NormalBullet extends Bullet {
