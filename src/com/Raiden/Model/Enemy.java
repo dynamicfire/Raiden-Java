@@ -69,11 +69,13 @@ public class Enemy extends Aircraft{
      */
     @Override
     public void draw(Graphics g, int[] sourcePoint) {
+        Random random = new Random();
+        int index = random.nextInt(2) * 4;
         g.drawImage(img,
                 (int) super.getPosX(), (int) super.getPosY(),
                 (int) super.getPosX() + super.getWidth(),
                 (int) super.getPosY() + super.getHeight(),
-                sourcePoint[0], sourcePoint[1], sourcePoint[2], sourcePoint[3], null);
+                sourcePoint[index], sourcePoint[index + 1], sourcePoint[index + 2], sourcePoint[index + 3], null);
     }
 
     public int getScore() {
