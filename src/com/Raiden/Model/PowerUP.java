@@ -10,7 +10,7 @@ import java.util.Random;
  * wingman and laser transmitter.
  * Power-up's movement handled by itself.
  *
- * @author Zheng Qifeng
+ * @author dynamicfire
  * @version v0.1 (28 Dec 2018)
  */
 public class PowerUP {
